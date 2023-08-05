@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">SushiTestApp</string>
+
+    <string name="car_list_add_new">Add new car</string>
+    <string name="car_list_image_description">Car Image</string>
+    <string name="car_list_miles">%s miles traveled by vehicle</string>
+
+    <string name="edit_car_image_url">Image url</string>
+    <string name="edit_car_price">Price in dollars</string>
+    <string name="edit_car_brand">Brand</string>
+    <string name="edit_car_model">Model</string>
+    <string name="edit_car_year">Year</string>
+    <string name="edit_car_status">Status</string>
+    <string name="edit_car_mileage">Miles</string>
+    <string name="edit_car_color">Color</string>
+    <string name="edit_car_vin">VIN</string>
+    <string name="edit_car_save">Save</string>
+</resources>
