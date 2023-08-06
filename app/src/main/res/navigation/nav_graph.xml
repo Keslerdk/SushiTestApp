@@ -9,11 +9,11 @@
         android:name="com.example.sushitestapp.presentor.list.CarListFragment"
         android:label="CarListFragment" >
         <action
-            android:id="@+id/ToCarDetailsFragment"
-            app:destination="@id/CarDetailsFragment" />
+            android:id="@+id/ToEditCarFragment"
+            app:destination="@id/EditCarFragment" />
     </fragment>
     <fragment
-        android:id="@+id/CarDetailsFragment"
+        android:id="@+id/EditCarFragment"
         android:name="com.example.sushitestapp.presentor.edit.EditCarFragment"
         android:label="CarDetailsFragment" />
 </navigation>

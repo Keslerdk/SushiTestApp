@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sushitestapp.R
 import com.example.sushitestapp.domain.CarListRepository
+import com.example.sushitestapp.presentor.list.CarListFragment.Companion.ALL_CATEGORY_NAME
 import com.example.sushitestapp.presentor.list.state.ListStateEvent
 import com.example.sushitestapp.presentor.list.state.ListViewState
 import com.example.sushitestapp.utils.Constants.NON_CAR_SELECTED_ID
@@ -31,13 +32,30 @@ class CarListViewModel @Inject constructor(private val repository: CarListReposi
     fun handleStateEvent(event: ListStateEvent) {
         when (event) {
             is ListStateEvent.GetCars -> launchJob(event, repository.fetchCars(event))
-            is ListStateEvent.AddNewCar -> navigationEvent.value = Event(R.id.ToCarDetailsFragment)
+            is ListStateEvent.AddNewCar -> navigationEvent.value = Event(R.id.ToEditCarFragment)
             is ListStateEvent.SetSelectedCar -> {
                 _viewState.value = getCurrentViewStateOrNew().copy(selectedCar = event.id)
                 if (event.id != NON_CAR_SELECTED_ID) {
-                    navigationEvent.value = Event(R.id.ToCarDetailsFragment)
+                    navigationEvent.value = Event(R.id.ToEditCarFragment)
                 }
             }
+
+            is ListStateEvent.SortByPrice -> launchJob(
+                event,
+                if (viewState.value?.isSortedByPrice == true) repository.fetchCars(event)
+                else repository.sortByPrice(event)
+            )
+
+            is ListStateEvent.GetCategories -> launchJob(event, repository.getCategories(event))
+
+            is ListStateEvent.FilterByCategory -> launchJob(
+                event,
+                if (event.category == ALL_CATEGORY_NAME) {
+                    repository.fetchCars(event)
+                } else {
+                    repository.getCarsByCategory(event, event.category)
+                }
+            )
         }
     }
 
@@ -48,7 +66,15 @@ class CarListViewModel @Inject constructor(private val repository: CarListReposi
             jobFunction.onEach { dataState ->
                 dataState.data?.let {
                     _viewState.value =
-                        getCurrentViewStateOrNew().copy(cars = it.cars, isLoading = false)
+                        getCurrentViewStateOrNew().copy(
+                            cars = it.cars,
+                            isLoading = false,
+                            isSortedByPrice = it.isSortedByPrice
+                        )
+
+                    it.categories?.let { categories ->
+                        _viewState.value = getCurrentViewStateOrNew().copy(categories = categories)
+                    }
                 }
                 dataState.error?.let {
                     Log.e(TAG, "launchJob: job error: $it")

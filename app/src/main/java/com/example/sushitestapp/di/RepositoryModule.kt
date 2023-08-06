@@ -22,7 +22,8 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideCarDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "database.db").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "database.db")
+            .createFromAsset("database/database_db.db").build()
 
 
     @Provides
@@ -32,5 +33,5 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideEditCarRepository(db: AppDatabase) : EditCarRepository = EditCarRepositoryImpl(db)
+    fun provideEditCarRepository(db: AppDatabase): EditCarRepository = EditCarRepositoryImpl(db)
 }

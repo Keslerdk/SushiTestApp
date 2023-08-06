@@ -3,6 +3,7 @@
 
     <string name="car_list_add_new">Add new car</string>
     <string name="car_list_image_description">Car Image</string>
+    <string name="car_list_vin">%1$s * %2$s</string>
     <string name="car_list_miles">%s miles traveled by vehicle</string>
 
     <string name="edit_car_image_url">Image url</string>
@@ -15,4 +16,7 @@
     <string name="edit_car_color">Color</string>
     <string name="edit_car_vin">VIN</string>
     <string name="edit_car_save">Save</string>
+
+    <string name="menu_sort_by_price">Sort by price</string>
+    <string name="menu_filter">Filter</string>
 </resources>

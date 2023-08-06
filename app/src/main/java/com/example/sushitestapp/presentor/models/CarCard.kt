@@ -6,11 +6,10 @@ data class CarCard(
     val color: String,
     val name: String,
     val vin: String,
-    val status: String,
     val miles: String,
     val price: String
 ) {
     override fun toString(): String {
-        return "CarCard(image='$image', color='$color', name='$name', vin='$vin', status='$status', miles='$miles', price='$price')"
+        return "CarCard(image='$image', color='$color', name='$name', vin='$vin', miles='$miles', price='$price')"
     }
 }

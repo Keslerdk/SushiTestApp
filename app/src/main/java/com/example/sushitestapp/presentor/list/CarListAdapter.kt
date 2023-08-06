@@ -30,7 +30,6 @@ class CarListAdapter(private val onItemClick: (id: Long) -> Unit) :
             vb.tvColor.text = car.color
             vb.tvName.text = car.name
             vb.tvVin.text = car.vin
-            vb.tvStatus.text = car.status
             vb.tvMiles.text = car.miles
             vb.tvPrice.text = car.price
             vb.root.setOnClickListener { onClick.invoke(car.id) }
