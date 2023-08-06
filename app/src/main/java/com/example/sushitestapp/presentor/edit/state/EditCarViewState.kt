@@ -1,5 +1,7 @@
 package com.example.sushitestapp.presentor.edit.state
 
+import com.example.sushitestapp.data.local.models.Car
+
 //data class EditCardState(
 //    val imageValue: String? = null,
 //    val priceValue: Long? = null,
@@ -13,6 +15,8 @@ package com.example.sushitestapp.presentor.edit.state
 //)
 
 data class EditCarViewState(
+    val car: Car? = null,
+    val isChangesSaved: Boolean = false,
     val isLoading: Boolean = false,
     val activeJobCounter: HashSet<String> = HashSet(),
 )

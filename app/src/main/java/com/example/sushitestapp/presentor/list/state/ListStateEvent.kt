@@ -7,16 +7,16 @@ sealed class ListStateEvent : StateEvent {
         override fun getErrorInfo(): String = "Can't get cars"
         override fun toString(): String = "GetCars"
 
-
     }
-    class AddNewCar() : ListStateEvent() {
+
+    object AddNewCar : ListStateEvent() {
         override fun getErrorInfo(): String = "Can't add new car"
         override fun toString(): String = "AddNewCar"
 
     }
-    class OpenCarDetails() : ListStateEvent() {
-        override fun getErrorInfo(): String = "Can't open car details"
-        override fun toString(): String = "OpenCarDetails"
 
+    class SetSelectedCar(val id: Long) : ListStateEvent() {
+        override fun getErrorInfo(): String = "Can't select car"
+        override fun toString(): String = "SetSelectedCar"
     }
 }

@@ -7,12 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.sushitestapp.data.local.models.Car
 import com.example.sushitestapp.databinding.EditCarFragmentBinding
 import com.example.sushitestapp.presentor.edit.state.EditCarEvent
-import dagger.hilt.EntryPoint
+import com.example.sushitestapp.utils.Constants.NON_CAR_SELECTED_ID
+import com.example.sushitestapp.utils.Constants.SELECTED_ITEM_ID_KEY
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.handleCoroutineException
 
 @AndroidEntryPoint
 class EditCarFragment : Fragment() {
@@ -20,7 +21,10 @@ class EditCarFragment : Fragment() {
     private var _binding: EditCarFragmentBinding? = null
     private val binding get() = _binding!!
 
+    private var selectedId: Long = -1
+
     private val viewModel: EditCarViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +39,8 @@ class EditCarFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnSave.setOnClickListener { onButtonClick() }
         initObservers()
+        selectedId = arguments?.getLong(SELECTED_ITEM_ID_KEY) ?: NON_CAR_SELECTED_ID
+        viewModel.handleEvent(EditCarEvent.GetSelectedCar(selectedId))
     }
 
 
@@ -50,6 +56,21 @@ class EditCarFragment : Fragment() {
                 binding.btnSave.isVisible = !it
                 binding.pbLoading.isVisible = it
             }
+
+            viewState.car?.let { car ->
+                binding.tilImageUrl.editText?.setText(car.image)
+                binding.tilBrand.editText?.setText(car.brand)
+                binding.tilModel.editText?.setText(car.model)
+                binding.tilColor.editText?.setText(car.color)
+                binding.tilYear.editText?.setText(car.year.toString())
+                binding.tilMiles.editText?.setText(car.mileage.toString())
+                binding.tilVin.editText?.setText(car.vin)
+                binding.tilPrice.editText?.setText(car.price.toString())
+            }
+
+            if (viewState.isChangesSaved) {
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -64,6 +85,6 @@ class EditCarFragment : Fragment() {
             color = binding.tilColor.editText?.text?.toString() ?: "",
             vin = binding.tilVin.editText?.text?.toString() ?: ""
         )
-        viewModel.handleEvent(EditCarEvent.AddNewCar(car))
+        viewModel.handleEvent(EditCarEvent.SaveChanges(car, selectedId))
     }
 }

@@ -7,7 +7,8 @@ import com.example.sushitestapp.utils.StateEvent
 import kotlinx.coroutines.flow.Flow
 
 interface EditCarRepository {
-    fun addNewCar(event: StateEvent, car: Car) : Flow<DataState<EditCarViewState>>
+    fun getSelectedCar(event: StateEvent, id: Long): Flow<DataState<EditCarViewState>>
+    fun addNewCar(event: StateEvent, car: Car): Flow<DataState<EditCarViewState>>
 
-    fun updateCar(event: StateEvent, car: Car) : Flow<DataState<EditCarViewState>>
+    fun updateCar(event: StateEvent, car: Car): Flow<DataState<EditCarViewState>>
 }

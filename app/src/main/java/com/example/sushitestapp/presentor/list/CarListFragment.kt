@@ -1,9 +1,7 @@
 package com.example.sushitestapp.presentor.list
 
-import android.content.ContentValues.TAG
 import androidx.fragment.app.Fragment
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.sushitestapp.databinding.CarListFragmentBinding
 import com.example.sushitestapp.presentor.list.state.ListStateEvent
+import com.example.sushitestapp.utils.Constants.NON_CAR_SELECTED_ID
+import com.example.sushitestapp.utils.Constants.SELECTED_ITEM_ID_KEY
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,9 +35,9 @@ class CarListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvList.adapter =
-            CarListAdapter { id -> viewModel.handleStateEvent(ListStateEvent.OpenCarDetails()) }
+            CarListAdapter { id -> viewModel.handleStateEvent(ListStateEvent.SetSelectedCar(id)) }
         viewModel.handleStateEvent(ListStateEvent.GetCars())
-        binding.fabAdd.setOnClickListener { viewModel.handleStateEvent(ListStateEvent.AddNewCar()) }
+        binding.fabAdd.setOnClickListener { viewModel.handleStateEvent(ListStateEvent.AddNewCar) }
         initObservers()
     }
 
@@ -54,14 +54,16 @@ class CarListFragment : Fragment() {
                 binding.fabAdd.isVisible = !it
             }
 
-            viewState.cars?.let {
-                Log.d(TAG, "initObservers: here $it")
-                adapter.submitList(it)
-            }
+            viewState.cars?.let { adapter.submitList(it) }
         }
 
         viewModel.navigationEvent.observeEvent(viewLifecycleOwner) { id ->
-            id?.let { findNavController().navigate(it) }
+            id?.let {
+                findNavController().navigate(it, Bundle().apply {
+                    putLong(SELECTED_ITEM_ID_KEY, viewModel.viewState.value?.selectedCar ?: -1)
+                })
+                viewModel.handleStateEvent(ListStateEvent.SetSelectedCar(NON_CAR_SELECTED_ID))
+            }
         }
     }
 }

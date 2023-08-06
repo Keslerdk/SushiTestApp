@@ -4,15 +4,16 @@ import com.example.sushitestapp.data.local.models.Car
 import com.example.sushitestapp.utils.StateEvent
 
 sealed class EditCarEvent : StateEvent{
-    class AddNewCar(val car: Car) : EditCarEvent() {
-        override fun getErrorInfo(): String = "Can't add new car"
-        override fun toString(): String  = "AddNewCar"
+
+    class GetSelectedCar(val id: Long) : EditCarEvent() {
+        override fun getErrorInfo(): String = "Can't get selected car."
+        override fun toString(): String  = "GetSelectedCar"
 
     }
 
-    class UpdateCar(val car: Car) : EditCarEvent() {
-        override fun getErrorInfo(): String = "Can't update car"
-        override fun toString(): String  = "UpdateCar"
+    class SaveChanges(val car: Car, val id: Long) : EditCarEvent() {
+        override fun getErrorInfo(): String = "Can't save car"
+        override fun toString(): String  = "SaveChanges"
     }
 
 }

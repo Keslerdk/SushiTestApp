@@ -12,6 +12,9 @@ interface CarDao {
     @Query("select * from cars")
     suspend fun getAll(): List<Car>
 
+    @Query("select * from cars where cars.id = :id")
+    suspend fun getCarById(id: Long) : Car
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addCar(car: Car) : Long
 

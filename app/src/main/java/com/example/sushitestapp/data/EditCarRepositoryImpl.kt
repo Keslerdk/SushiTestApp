@@ -15,12 +15,23 @@ import javax.inject.Inject
 
 class EditCarRepositoryImpl @Inject constructor(private val database: AppDatabase) :
     EditCarRepository {
+    override fun getSelectedCar(event: StateEvent, id: Long): Flow<DataState<EditCarViewState>> =
+        flow {
+            val response = safeQuery(Dispatchers.IO) { database.carDao().getCarById(id) }
+            emit(object : ResponseHandler<EditCarViewState, Car>(response, event) {
+                override fun handleSuccess(resultObj: Car): DataState<EditCarViewState> =
+                    DataState.data(
+                        EditCarViewState(car = resultObj)
+                    )
+            }.getResult())
+        }
+
     override fun addNewCar(event: StateEvent, car: Car): Flow<DataState<EditCarViewState>> = flow {
         val response = safeQuery(Dispatchers.IO) { database.carDao().addCar(car) }
         emit(object : ResponseHandler<EditCarViewState, Long>(response, event) {
             override fun handleSuccess(resultObj: Long): DataState<EditCarViewState> {
                 return if (resultObj > 0) {
-                    DataState.data(EditCarViewState(isLoading = false))
+                    DataState.data(EditCarViewState(isChangesSaved = true))
                 } else {
                     DataState.error("Something gone wrong")
                 }
@@ -34,7 +45,7 @@ class EditCarRepositoryImpl @Inject constructor(private val database: AppDatabas
         emit(object : ResponseHandler<EditCarViewState, Int>(response, event) {
             override fun handleSuccess(resultObj: Int): DataState<EditCarViewState> {
                 return if (resultObj > 0) {
-                    DataState.data(EditCarViewState(isLoading = false))
+                    DataState.data(EditCarViewState(isChangesSaved = true))
                 } else {
                     DataState.error("Something gone wrong")
                 }
